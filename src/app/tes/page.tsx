@@ -159,7 +159,7 @@ export default function TesPage() {
       <FlowIndicator currentStep={2} />
 
       {/* Kartu Header Bagian & Stepper A-G */}
-      <div className="bg-white rounded-2xl border border-zinc-200/90 p-6 sm:p-7 space-y-4">
+      <div className="bg-white rounded-2xl border border-zinc-200/90 p-4 sm:p-7 space-y-4">
         {/* Info Peserta Ringkas */}
         <div className="flex items-center justify-between text-xs text-zinc-500 border-b border-zinc-100 pb-3">
           <div className="flex items-center space-x-1.5">
@@ -326,18 +326,19 @@ export default function TesPage() {
       )}
 
       {/* Navigasi Footer */}
-      <div className="flex items-center justify-between pt-4 border-t border-zinc-200">
+      <div className="flex items-center justify-between gap-2.5 sm:gap-4 pt-4 border-t border-zinc-200">
         <button
           type="button"
           onClick={handlePrev}
           disabled={isFirstSection || isSubmitting}
-          className={`px-4.5 py-2.5 rounded-xl text-xs font-semibold border transition ${
+          className={`px-3.5 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold border transition flex items-center justify-center shrink-0 whitespace-nowrap shadow-2xs ${
             isFirstSection || isSubmitting
               ? "border-zinc-200 text-zinc-300 cursor-not-allowed bg-zinc-50"
-              : "border-zinc-300 text-zinc-700 bg-white hover:bg-zinc-50 cursor-pointer"
+              : "border-zinc-300 text-zinc-700 bg-white hover:bg-zinc-50 active:bg-zinc-100 cursor-pointer"
           }`}
         >
-          ← Bagian Sebelumnya
+          <span className="sm:hidden">← Sebelumnya</span>
+          <span className="hidden sm:inline">← Bagian Sebelumnya</span>
         </button>
 
         {isLastSection ? (
@@ -345,26 +346,34 @@ export default function TesPage() {
             type="button"
             onClick={handleSubmit}
             disabled={!hasilValidasi.valid || isSubmitting}
-            className={`px-6 py-2.5 rounded-xl text-xs font-bold transition ${
+            className={`px-4 sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center whitespace-nowrap shadow-xs ${
               !hasilValidasi.valid || isSubmitting
                 ? "bg-zinc-200 text-zinc-400 cursor-not-allowed"
                 : "bg-forest hover:bg-forest-hover active:bg-[#144731] text-white cursor-pointer"
             }`}
           >
-            {isSubmitting ? "Menyimpan Data..." : "Selesai & Kirim Jawaban ✓"}
+            {isSubmitting ? (
+              "Menyimpan..."
+            ) : (
+              <>
+                <span className="sm:hidden">Selesai & Kirim ✓</span>
+                <span className="hidden sm:inline">Selesai & Kirim Jawaban ✓</span>
+              </>
+            )}
           </button>
         ) : (
           <button
             type="button"
             onClick={handleNext}
             disabled={!hasilValidasi.valid}
-            className={`px-6 py-2.5 rounded-xl text-xs font-bold transition ${
+            className={`px-4 sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center whitespace-nowrap shadow-xs ${
               !hasilValidasi.valid
                 ? "bg-zinc-200 text-zinc-400 cursor-not-allowed"
                 : "bg-forest hover:bg-forest-hover active:bg-[#144731] text-white cursor-pointer"
             }`}
           >
-            Lanjut ke Bagian Berikutnya →
+            <span className="sm:hidden">Berikutnya →</span>
+            <span className="hidden sm:inline">Lanjut ke Bagian Berikutnya →</span>
           </button>
         )}
       </div>
