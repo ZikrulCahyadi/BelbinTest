@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { deleteHasilBelbin } from "@/actions/admin-actions";
 import { BELBIN_ROLES } from "@/lib/belbin/roles";
 import { ROLES, Role } from "@/lib/belbin/scoring-key";
 import { tentukanPeran, SkorPeran } from "@/lib/belbin/score";
@@ -34,21 +35,44 @@ interface AdminTableProps {
 
 export function AdminTable({ initialData }: AdminTableProps) {
   const router = useRouter();
+  const [dataList, setDataList] = useState(initialData);
   const [search, setSearch] = useState("");
   const [filterDept, setFilterDept] = useState("all");
   const [filterRole, setFilterRole] = useState("all");
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setDataList(initialData);
+  }, [initialData]);
+
+  const handleDelete = async (id: string, nama: string) => {
+    const confirmed = window.confirm(
+      `Apakah Anda yakin ingin menghapus data peserta "${nama}"?\nData yang dihapus tidak dapat dipulihkan.`
+    );
+    if (!confirmed) return;
+
+    setDeletingId(id);
+    const res = await deleteHasilBelbin(id);
+    if (res.success) {
+      setDataList((prev) => prev.filter((d) => d.id !== id));
+      router.refresh();
+    } else {
+      alert(res.error || "Gagal menghapus data peserta.");
+    }
+    setDeletingId(null);
+  };
 
   const departemenList = useMemo(() => {
     const set = new Set<string>();
-    initialData.forEach((d) => {
+    dataList.forEach((d) => {
       if (d.departemen) set.add(d.departemen);
     });
     return Array.from(set).sort();
-  }, [initialData]);
+  }, [dataList]);
 
   const processedData = useMemo(() => {
-    return initialData.map((item) => {
+    return dataList.map((item) => {
       const skor: SkorPeran = {
         SH: item.skor_sh,
         CO: item.skor_co,
@@ -68,7 +92,7 @@ export function AdminTable({ initialData }: AdminTableProps) {
         utamaSeri: peranInfo.utamaSeri,
       };
     });
-  }, [initialData]);
+  }, [dataList]);
 
   const filteredData = useMemo(() => {
     return processedData.filter((item) => {
@@ -387,13 +411,39 @@ export function AdminTable({ initialData }: AdminTableProps) {
 
                       {/* Aksi */}
                       <td className="py-4 px-5 text-right whitespace-nowrap">
-                        <Link
-                          href={`/admin/${item.id}`}
-                          className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-forest-light text-forest hover:bg-forest hover:text-white border border-forest-border font-bold text-xs transition shadow-2xs"
-                        >
-                          <span>Lihat Detail</span>
-                          <span>→</span>
-                        </Link>
+                        <div className="inline-flex items-center space-x-2">
+                          <Link
+                            href={`/admin/${item.id}`}
+                            className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-forest-light text-forest hover:bg-forest hover:text-white border border-forest-border font-bold text-xs transition shadow-2xs"
+                          >
+                            <span>Lihat Detail</span>
+                            <span>→</span>
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => handleDelete(item.id, item.nama)}
+                            disabled={deletingId === item.id}
+                            className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-xl bg-rose-50 text-rose-700 hover:bg-rose-600 hover:text-white border border-rose-200 font-bold text-xs transition shadow-2xs disabled:opacity-50 cursor-pointer"
+                            title="Hapus data peserta ini"
+                          >
+                            <svg
+                              className="w-3.5 h-3.5 shrink-0"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                              />
+                            </svg>
+                            <span>
+                              {deletingId === item.id ? "Menghapus..." : "Hapus"}
+                            </span>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
