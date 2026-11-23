@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useId } from "react";
+import { useState, useId, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FlowIndicator } from "@/components/FlowIndicator";
 
@@ -10,6 +10,18 @@ export default function HomePage() {
   const [nama, setNama] = useState("");
   const [departemen, setDepartemen] = useState("");
   const [jabatan, setJabatan] = useState("");
+
+  // Cek apakah peserta sudah pernah menyelesaikan tes sebelumnya
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("belbin_hasil_tes");
+      if (saved) {
+        router.replace("/selesai");
+      }
+    } catch {
+      // safe check
+    }
+  }, [router]);
 
   const [touched, setTouched] = useState<{
     nama?: boolean;

@@ -132,6 +132,9 @@ export default function TesPage() {
       try {
         sessionStorage.removeItem("belbin_jawaban");
         sessionStorage.removeItem("belbin_identitas");
+        if (res.hasil) {
+          localStorage.setItem("belbin_hasil_tes", JSON.stringify(res.hasil));
+        }
       } catch {
         // safe clear
       }

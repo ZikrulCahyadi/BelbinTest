@@ -6,6 +6,8 @@ export type RoleDefinition = {
   kode: Role;
   nama: string;
   kelompok: RoleCategory;
+  hewan: string;
+  hewanEmoji: string;
   deskripsi: string;
   karakteristik: string;
   fungsi: string;
@@ -21,6 +23,8 @@ export const BELBIN_ROLES: Record<Role, RoleDefinition> = {
     kode: "SH",
     nama: "Shaper",
     kelompok: "Action",
+    hewan: "Badak",
+    hewanEmoji: "🦏",
     deskripsi:
       "Sangat termotivasi dengan energi dinamis dan dorongan pencapaian yang tinggi. Menyukai tantangan, memimpin serta mendorong orang lain untuk terus bergerak maju mengatasi rintangan.",
     karakteristik: "Tangguh, ekstrover, dinamis, kompetitif, berorientasi hasil, dan berkembang di bawah tekanan.",
@@ -32,6 +36,8 @@ export const BELBIN_ROLES: Record<Role, RoleDefinition> = {
     kode: "CO",
     nama: "Co-ordinator",
     kelompok: "Social",
+    hewan: "Singa",
+    hewanEmoji: "🦁",
     deskripsi:
       "Pemimpin yang matang, tenang, dan percaya diri. Mampu mengklarifikasi tujuan bersama, memfasilitasi pengambilan keputusan, serta mendelegasikan tugas secara efektif.",
     karakteristik: "Tenang, percaya diri, terkontrol, berpikiran terbuka, dan menghargai potensi orang lain.",
@@ -43,6 +49,8 @@ export const BELBIN_ROLES: Record<Role, RoleDefinition> = {
     kode: "PL",
     nama: "Plant",
     kelompok: "Thinking",
+    hewan: "Semut",
+    hewanEmoji: "🐜",
     deskripsi:
       "Inovator dan pemikir bebas yang sangat kreatif. Gemar memecahkan masalah-masalah rumit dengan ide-ide orisinil dan solusi terobosan.",
     karakteristik: "Individualis, berpikiran serius, tidak konvensional, imajinatif, dan mandiri.",
@@ -54,6 +62,8 @@ export const BELBIN_ROLES: Record<Role, RoleDefinition> = {
     kode: "RI",
     nama: "Resource Investigator",
     kelompok: "Social",
+    hewan: "Anjing",
+    hewanEmoji: "🐕",
     deskripsi:
       "Ekstrover, antusias, dan komunikatif. Ahli dalam menggali peluang eksternal, membangun jejaring kontak, dan membawa sumber daya baru ke dalam tim.",
     karakteristik: "Mudah bergaul, ingin tahu, penuh antusiasme, dan luwes bernegosiasi.",
@@ -65,6 +75,8 @@ export const BELBIN_ROLES: Record<Role, RoleDefinition> = {
     kode: "ME",
     nama: "Monitor Evaluator",
     kelompok: "Thinking",
+    hewan: "Burung Hantu",
+    hewanEmoji: "🦉",
     deskripsi:
       "Kritis, bijaksana, dan objektif. Mampu menganalisis semua opsi yang ada secara rasional dan memberikan penilaian akurat sebelum keputusan diambil.",
     karakteristik: "Rasional, tenang (sober), analitis, tidak mudah terbawa emosi, dan berhati-hati.",
@@ -76,6 +88,8 @@ export const BELBIN_ROLES: Record<Role, RoleDefinition> = {
     kode: "IMP",
     nama: "Implementer",
     kelompok: "Action",
+    hewan: "Kuda",
+    hewanEmoji: "🐎",
     deskripsi:
       "Disiplin, teratur, dan dapat diandalkan. Mengubah konsep dan rencana kerja menjadi prosedur serta tindakan praktis yang efisien.",
     karakteristik: "Terorganisasi dengan baik, menikmati keteraturan, memiliki akal sehat praktis, tertib, dan berdisiplin tinggi.",
@@ -87,6 +101,8 @@ export const BELBIN_ROLES: Record<Role, RoleDefinition> = {
     kode: "TW",
     nama: "Team Worker",
     kelompok: "Social",
+    hewan: "Lebah",
+    hewanEmoji: "🐝",
     deskripsi:
       "Kooperatif, lembut, dan peka. Pendengar yang baik yang selalu memelihara harmoni, mencegah gesekan antarpribadi, dan mendukung keutuhan tim.",
     karakteristik: "Berorientasi sosial, suportif, peka terhadap perasaan rekan kerja, dan diplomatis.",
@@ -98,6 +114,8 @@ export const BELBIN_ROLES: Record<Role, RoleDefinition> = {
     kode: "CF",
     nama: "Completer Finisher",
     kelompok: "Action",
+    hewan: "Laba-laba",
+    hewanEmoji: "🕷️",
     deskripsi:
       "Tekun, teliti, dan berstandar tinggi. Memeriksa pekerjaan hingga ke detail terkecil untuk mencegah kesalahan dan memastikan hasil kerja selesai tepat waktu.",
     karakteristik: "Cermat (painstaking), tertib, bertanggung jawab, dan memiliki dorongan kuat untuk menyelesaikan pekerjaan tanpa cela.",

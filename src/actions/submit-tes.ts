@@ -4,7 +4,7 @@ import { z } from "zod";
 import { SECTIONS } from "@/lib/belbin/questions";
 import { validateJawaban, type Jawaban } from "@/lib/belbin/validate";
 import { hitungSkor, tentukanPeran } from "@/lib/belbin/score";
-import { VERSI_KUNCI } from "@/lib/belbin/scoring-key";
+import { Role, VERSI_KUNCI } from "@/lib/belbin/scoring-key";
 import { createAdminClient } from "@/lib/supabase/server-admin";
 
 const IdentitasSchema = z.object({
@@ -13,8 +13,18 @@ const IdentitasSchema = z.object({
   jabatan: z.string().trim().min(1, "Jabatan wajib diisi"),
 });
 
+export type HasilPeserta = {
+  nama: string;
+  departemen: string;
+  jabatan: string;
+  peranUtama: Role;
+  peranSekunder: Role;
+  skorUtama: number;
+  skorSekunder: number;
+};
+
 export type SubmitResult =
-  | { success: true }
+  | { success: true; hasil: HasilPeserta }
   | { success: false; error: string };
 
 /**
@@ -76,9 +86,19 @@ export async function submitTes(
       .gte("created_at", sixtySecondsAgo)
       .limit(1);
 
+    const hasilPayload: HasilPeserta = {
+      nama: identitas.nama,
+      departemen: identitas.departemen,
+      jabatan: identitas.jabatan,
+      peranUtama: peran.utama,
+      peranSekunder: peran.sekunder,
+      skorUtama: skor[peran.utama],
+      skorSekunder: skor[peran.sekunder],
+    };
+
     if (existing && existing.length > 0) {
       // Submission ganda terdeteksi, anggap berhasil tanpa menduplikasi data
-      return { success: true };
+      return { success: true, hasil: hasilPayload };
     }
 
     const { error: insertError } = await supabase.from("hasil_belbin").insert({
@@ -106,7 +126,7 @@ export async function submitTes(
       };
     }
 
-    return { success: true };
+    return { success: true, hasil: hasilPayload };
   } catch {
     return {
       success: false,
