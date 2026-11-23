@@ -4,34 +4,62 @@ import { useState, useEffect } from "react";
 import { FlowIndicator } from "@/components/FlowIndicator";
 import { BELBIN_ROLES } from "@/lib/belbin/roles";
 import { ROLES, type Role } from "@/lib/belbin/scoring-key";
-import type { HasilPeserta } from "@/actions/submit-tes";
+import { getHasilPesertaTerakhir, type HasilPeserta } from "@/actions/submit-tes";
 
 export default function SelesaiPage() {
   const [hasil, setHasil] = useState<HasilPeserta | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("belbin_hasil_tes");
-      if (saved) {
-        setHasil(JSON.parse(saved) as HasilPeserta);
+    async function loadHasil() {
+      try {
+        const saved = localStorage.getItem("belbin_hasil_tes");
+        if (saved) {
+          const parsed = JSON.parse(saved) as HasilPeserta;
+          setHasil(parsed);
+
+          // Jika data cache di browser belum memiliki skorSemua, ambil otomatis dari server
+          if ((!parsed.skorSemua || Object.keys(parsed.skorSemua).length === 0) && parsed.nama) {
+            const fresh = await getHasilPesertaTerakhir(parsed.nama);
+            if (fresh) {
+              setHasil(fresh);
+              localStorage.setItem("belbin_hasil_tes", JSON.stringify(fresh));
+            }
+          }
+        }
+      } catch {
+        // safe fallback
+      } finally {
+        setIsLoaded(true);
       }
-    } catch {
-      // safe fallback
-    } finally {
-      setIsLoaded(true);
     }
+
+    loadHasil();
   }, []);
 
   const roleUtama = hasil?.peranUtama ? BELBIN_ROLES[hasil.peranUtama as Role] : null;
   const roleSekunder = hasil?.peranSekunder ? BELBIN_ROLES[hasil.peranSekunder as Role] : null;
+
+  // Skor untuk 8 peran dengan fallback jika ada
+  const displayScores: Record<Role, number> = hasil?.skorSemua || {
+    SH: hasil?.peranUtama === "SH" ? (hasil?.skorUtama ?? 0) : hasil?.peranSekunder === "SH" ? (hasil?.skorSekunder ?? 0) : 0,
+    CO: hasil?.peranUtama === "CO" ? (hasil?.skorUtama ?? 0) : hasil?.peranSekunder === "CO" ? (hasil?.skorSekunder ?? 0) : 0,
+    PL: hasil?.peranUtama === "PL" ? (hasil?.skorUtama ?? 0) : hasil?.peranSekunder === "PL" ? (hasil?.skorSekunder ?? 0) : 0,
+    RI: hasil?.peranUtama === "RI" ? (hasil?.skorUtama ?? 0) : hasil?.peranSekunder === "RI" ? (hasil?.skorSekunder ?? 0) : 0,
+    ME: hasil?.peranUtama === "ME" ? (hasil?.skorUtama ?? 0) : hasil?.peranSekunder === "ME" ? (hasil?.skorSekunder ?? 0) : 0,
+    IMP: hasil?.peranUtama === "IMP" ? (hasil?.skorUtama ?? 0) : hasil?.peranSekunder === "IMP" ? (hasil?.skorSekunder ?? 0) : 0,
+    TW: hasil?.peranUtama === "TW" ? (hasil?.skorUtama ?? 0) : hasil?.peranSekunder === "TW" ? (hasil?.skorSekunder ?? 0) : 0,
+    CF: hasil?.peranUtama === "CF" ? (hasil?.skorUtama ?? 0) : hasil?.peranSekunder === "CF" ? (hasil?.skorSekunder ?? 0) : 0,
+  };
+
+  const totalPoin = Object.values(displayScores).reduce((a, b) => a + b, 0);
 
   return (
     <div className="max-w-4xl mx-auto my-8 px-4 space-y-6">
       {/* Indikator Alur */}
       <FlowIndicator currentStep={3} />
 
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-zinc-200/90 shadow-sm space-y-6">
+      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-zinc-200/90 shadow-sm space-y-7">
         {/* Header Sukses */}
         <div className="text-center space-y-3">
           <div className="w-14 h-14 mx-auto rounded-full bg-forest-light text-forest flex items-center justify-center font-bold text-2xl border border-forest-border shadow-2xs">
@@ -53,7 +81,7 @@ export default function SelesaiPage() {
           </div>
         </div>
 
-        {/* Teks Header di Atas Card Sesuai Permintaan */}
+        {/* Teks Header di Atas Card Sesuai Mockup */}
         {isLoaded && roleUtama && roleSekunder && (
           <div className="text-center pt-3 border-t border-zinc-100">
             <span className="text-xs font-bold text-forest uppercase tracking-wider">
@@ -80,19 +108,28 @@ export default function SelesaiPage() {
 
               {/* Row Avatar & Info */}
               <div className="flex items-center space-x-4">
-                <div className="w-20 h-20 rounded-full bg-[#E2F3EB] flex items-center justify-center text-4xl shrink-0 shadow-2xs">
-                  {roleUtama.hewanEmoji}
+                <div className="w-20 h-20 rounded-full bg-[#E2F3EB] flex items-center justify-center overflow-hidden shrink-0 shadow-2xs">
+                  <img
+                    src={roleUtama.gambar}
+                    alt={roleUtama.hewan}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Fallback ke emoji jika gambar belum dimuat
+                      e.currentTarget.style.display = "none";
+                    }}
+                  />
+                  <span className="text-4xl hidden only:inline">
+                    {roleUtama.hewanEmoji}
+                  </span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline justify-between gap-1">
                     <h3 className="text-lg sm:text-xl font-extrabold text-[#1B2A22] leading-tight truncate">
                       {roleUtama.nama} <span className="font-bold">({roleUtama.kode})</span>
                     </h3>
-                    {(hasil?.skorUtama !== undefined || hasil?.skorSemua?.[roleUtama.kode] !== undefined) && (
-                      <span className="text-xs font-extrabold text-forest bg-[#E2F3EB] px-2.5 py-0.5 rounded-full border border-forest/20 shrink-0">
-                        {hasil?.skorSemua?.[roleUtama.kode] ?? hasil?.skorUtama} Poin
-                      </span>
-                    )}
+                    <span className="text-xs font-extrabold text-forest bg-[#E2F3EB] px-2.5 py-0.5 rounded-full border border-forest/20 shrink-0">
+                      {displayScores[roleUtama.kode]} Poin
+                    </span>
                   </div>
                   <span className="inline-block px-3 py-0.5 rounded-full bg-[#E2F3EB] text-[#13583B] font-bold text-xs mt-1.5">
                     Karakter: {roleUtama.hewan}
@@ -121,19 +158,28 @@ export default function SelesaiPage() {
 
               {/* Row Avatar & Info */}
               <div className="flex items-center space-x-4">
-                <div className="w-20 h-20 rounded-full bg-[#E8EDF5] flex items-center justify-center text-4xl shrink-0 shadow-2xs">
-                  {roleSekunder.hewanEmoji}
+                <div className="w-20 h-20 rounded-full bg-[#E8EDF5] flex items-center justify-center overflow-hidden shrink-0 shadow-2xs">
+                  <img
+                    src={roleSekunder.gambar}
+                    alt={roleSekunder.hewan}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Fallback ke emoji jika gambar belum dimuat
+                      e.currentTarget.style.display = "none";
+                    }}
+                  />
+                  <span className="text-4xl hidden only:inline">
+                    {roleSekunder.hewanEmoji}
+                  </span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline justify-between gap-1">
                     <h3 className="text-lg sm:text-xl font-extrabold text-[#1B2A22] leading-tight truncate">
                       {roleSekunder.nama} <span className="font-bold">({roleSekunder.kode})</span>
                     </h3>
-                    {(hasil?.skorSekunder !== undefined || hasil?.skorSemua?.[roleSekunder.kode] !== undefined) && (
-                      <span className="text-xs font-extrabold text-[#3F4D67] bg-[#E8EDF5] px-2.5 py-0.5 rounded-full border border-[#3F4D67]/20 shrink-0">
-                        {hasil?.skorSemua?.[roleSekunder.kode] ?? hasil?.skorSekunder} Poin
-                      </span>
-                    )}
+                    <span className="text-xs font-extrabold text-[#3F4D67] bg-[#E8EDF5] px-2.5 py-0.5 rounded-full border border-[#3F4D67]/20 shrink-0">
+                      {displayScores[roleSekunder.kode]} Poin
+                    </span>
                   </div>
                   <span className="inline-block px-3 py-0.5 rounded-full bg-[#E8EDF5] text-[#3F4D67] font-bold text-xs mt-1.5">
                     Karakter: {roleSekunder.hewan}
@@ -153,7 +199,7 @@ export default function SelesaiPage() {
         )}
 
         {/* Distribusi Skor 8 Peran Tim (Persis Seperti di Admin) */}
-        {isLoaded && hasil?.skorSemua && (
+        {isLoaded && roleUtama && (
           <div className="bg-white rounded-2xl p-6 sm:p-7 border border-zinc-200/90 shadow-xs space-y-5 pt-4">
             <div className="flex items-center justify-between text-xs border-b border-zinc-100 pb-3">
               <div>
@@ -165,16 +211,16 @@ export default function SelesaiPage() {
                 </p>
               </div>
               <span className="text-dark font-bold bg-zinc-100 px-3 py-1 rounded-full border border-zinc-200">
-                Total {Object.values(hasil.skorSemua).reduce((a, b) => a + b, 0)} / 70 poin
+                Total {totalPoin > 0 ? totalPoin : 70} / 70 poin
               </span>
             </div>
 
             <div className="space-y-3.5 pt-1">
               {ROLES.map((roleKey) => {
                 const role = BELBIN_ROLES[roleKey];
-                const nilai = hasil.skorSemua[roleKey] ?? 0;
-                const isUtama = roleKey === hasil.peranUtama;
-                const isSekunder = roleKey === hasil.peranSekunder;
+                const nilai = displayScores[roleKey] ?? 0;
+                const isUtama = roleKey === hasil?.peranUtama;
+                const isSekunder = roleKey === hasil?.peranSekunder;
                 const percentage = Math.round((nilai / 70) * 100);
 
                 return (

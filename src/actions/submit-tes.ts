@@ -136,3 +136,45 @@ export async function submitTes(
     };
   }
 }
+
+/**
+ * Mengambil rekap skor 8 peran untuk peserta tertentu (digunakan oleh halaman /selesai jika local cache belum lengkap)
+ */
+export async function getHasilPesertaTerakhir(nama: string): Promise<HasilPeserta | null> {
+  try {
+    const supabase = createAdminClient();
+    const { data } = await supabase
+      .from("hasil_belbin")
+      .select("*")
+      .eq("nama", nama)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .single();
+
+    if (!data) return null;
+
+    const skorSemua: Record<Role, number> = {
+      SH: data.skor_sh,
+      CO: data.skor_co,
+      PL: data.skor_pl,
+      RI: data.skor_ri,
+      ME: data.skor_me,
+      IMP: data.skor_imp,
+      TW: data.skor_tw,
+      CF: data.skor_cf,
+    };
+
+    return {
+      nama: data.nama,
+      departemen: data.departemen,
+      jabatan: data.jabatan,
+      peranUtama: data.peran_utama as Role,
+      peranSekunder: data.peran_sekunder as Role,
+      skorUtama: skorSemua[data.peran_utama as Role] ?? 0,
+      skorSekunder: skorSemua[data.peran_sekunder as Role] ?? 0,
+      skorSemua,
+    };
+  } catch {
+    return null;
+  }
+}
