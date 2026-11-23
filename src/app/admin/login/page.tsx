@@ -40,8 +40,12 @@ export default function AdminLoginPage() {
 
       router.push("/admin");
       router.refresh();
-    } catch {
-      setError("Gagal terhubung ke server autentikasi.");
+    } catch (err: unknown) {
+      if (err instanceof Error && err.message.includes("NEXT_PUBLIC_SUPABASE")) {
+        setError("Kunci Environment Variables Supabase belum diatur di Vercel Dashboard.");
+      } else {
+        setError("Gagal terhubung ke server autentikasi. Pastikan variabel Supabase sudah disetel di Vercel.");
+      }
       setLoading(false);
     }
   };
@@ -246,16 +250,8 @@ export default function AdminLoginPage() {
                 disabled={loading}
                 className="w-full h-12 min-h-[48px] rounded-xl font-bold text-sm sm:text-base text-white transition-all flex items-center justify-center space-x-2 bg-[#13583B] hover:bg-[#0f442e] active:bg-[#0a3121] shadow-xs disabled:opacity-50 cursor-pointer"
               >
-                <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2.5}
-                    d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-                  />
-                </svg>
                 <span>{loading ? "Memverifikasi..." : "Masuk ke Panel Admin"}</span>
-                <span>→</span>
+                {!loading && <span className="text-lg">→</span>}
               </button>
             </div>
           </form>
