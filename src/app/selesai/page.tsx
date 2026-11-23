@@ -99,12 +99,12 @@ export default function SelesaiPage() {
             {/* Card 1: PERAN UTAMA */}
             <div className="relative bg-white rounded-3xl border border-emerald-200/90 shadow-xs overflow-hidden p-5 sm:p-6 flex flex-col h-full">
               {/* Baris Atas: Ribbon di Kiri & Poin di Kanan (Sudut) */}
-              <div className="flex items-center justify-between -mt-5 -ml-5 -mr-5 mb-4 pr-4">
+              <div className="flex items-start justify-between -mt-5 -ml-5 -mr-5 mb-4 pr-4 sm:pr-5">
                 <span className="inline-flex items-center space-x-1.5 px-4 py-1.5 bg-[#13583B] text-white text-[11px] font-extrabold tracking-wider rounded-br-2xl uppercase shadow-2xs">
                   <span>★</span>
                   <span>PERAN UTAMA</span>
                 </span>
-                <span className="text-xs font-extrabold text-forest bg-[#E2F3EB] px-3 py-1 rounded-full border border-forest/20 shrink-0 shadow-2xs whitespace-nowrap">
+                <span className="text-xs font-extrabold text-forest bg-[#E2F3EB] px-3 py-1 rounded-full border border-forest/20 shrink-0 shadow-2xs whitespace-nowrap mt-3 sm:mt-3.5">
                   {displayScores[roleUtama.kode]} Poin
                 </span>
               </div>
@@ -152,12 +152,12 @@ export default function SelesaiPage() {
             {/* Card 2: PERAN SEKUNDER */}
             <div className="relative bg-white rounded-3xl border border-zinc-200/90 shadow-xs overflow-hidden p-5 sm:p-6 flex flex-col h-full">
               {/* Baris Atas: Ribbon di Kiri & Poin di Kanan (Sudut) */}
-              <div className="flex items-center justify-between -mt-5 -ml-5 -mr-5 mb-4 pr-4">
+              <div className="flex items-start justify-between -mt-5 -ml-5 -mr-5 mb-4 pr-4 sm:pr-5">
                 <span className="inline-flex items-center space-x-1.5 px-4 py-1.5 bg-[#3F4D67] text-white text-[11px] font-extrabold tracking-wider rounded-br-2xl uppercase shadow-2xs">
                   <span>»</span>
                   <span>PERAN SEKUNDER</span>
                 </span>
-                <span className="text-xs font-extrabold text-[#3F4D67] bg-[#E8EDF5] px-3 py-1 rounded-full border border-[#3F4D67]/20 shrink-0 shadow-2xs whitespace-nowrap">
+                <span className="text-xs font-extrabold text-[#3F4D67] bg-[#E8EDF5] px-3 py-1 rounded-full border border-[#3F4D67]/20 shrink-0 shadow-2xs whitespace-nowrap mt-3 sm:mt-3.5">
                   {displayScores[roleSekunder.kode]} Poin
                 </span>
               </div>
