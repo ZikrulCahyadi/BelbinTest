@@ -128,13 +128,6 @@ export default function SelesaiPage() {
             </div>
           </div>
         )}
-
-        {/* Kotak Informasi Penutup */}
-        <div className="p-4 rounded-2xl bg-zinc-50 border border-zinc-200/80 text-xs text-zinc-600 leading-relaxed text-center">
-          <p className="font-medium">
-            Hasil evaluasi peran tim Belbin Anda telah tersimpan secara permanen di dalam sistem dan dapat ditinjau langsung oleh pengelola tim / HR.
-          </p>
-        </div>
       </div>
     </div>
   );
