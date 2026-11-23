@@ -21,6 +21,7 @@ export type HasilPeserta = {
   peranSekunder: Role;
   skorUtama: number;
   skorSekunder: number;
+  skorSemua: Record<Role, number>;
 };
 
 export type SubmitResult =
@@ -94,6 +95,7 @@ export async function submitTes(
       peranSekunder: peran.sekunder,
       skorUtama: skor[peran.utama],
       skorSekunder: skor[peran.sekunder],
+      skorSemua: skor,
     };
 
     if (existing && existing.length > 0) {
