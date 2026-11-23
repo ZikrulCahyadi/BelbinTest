@@ -27,7 +27,7 @@ export default function SelesaiPage() {
   const roleSekunder = hasil?.peranSekunder ? BELBIN_ROLES[hasil.peranSekunder as Role] : null;
 
   return (
-    <div className="max-w-2xl mx-auto my-8 px-4 space-y-6">
+    <div className="max-w-4xl mx-auto my-8 px-4 space-y-6">
       {/* Indikator Alur */}
       <FlowIndicator currentStep={3} />
 
@@ -53,78 +53,75 @@ export default function SelesaiPage() {
           </div>
         </div>
 
-        {/* Hasil Peran Utama & Sekunder beserta Representasi Hewan */}
+        {/* Hasil Peran Utama & Sekunder Persis Desain Mockup */}
         {isLoaded && roleUtama && roleSekunder && (
-          <div className="space-y-4 pt-2 border-t border-zinc-100">
-            <div className="text-center">
-              <span className="text-xs font-bold text-forest uppercase tracking-wider">
-                Profil Peran Tim Anda
-              </span>
-              <h2 className="text-base sm:text-lg font-bold text-dark mt-0.5">
-                Karakteristik & Peran Alami Anda dalam Tim
-              </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-3">
+            {/* Card 1: PERAN UTAMA */}
+            <div className="relative bg-white rounded-3xl border border-emerald-200/90 shadow-xs overflow-hidden p-6 pt-5 flex flex-col justify-between">
+              {/* Badge Ribbon Pojok Kiri Atas */}
+              <div className="-mt-5 -ml-6 mb-5">
+                <span className="inline-flex items-center space-x-1.5 px-4 py-1.5 bg-[#13583B] text-white text-[11px] font-extrabold tracking-wider rounded-br-2xl uppercase shadow-2xs">
+                  <span>★</span>
+                  <span>PERAN UTAMA</span>
+                </span>
+              </div>
+
+              {/* Row Avatar & Info */}
+              <div className="flex items-center space-x-4">
+                <div className="w-20 h-20 rounded-full bg-[#E2F3EB] flex items-center justify-center text-4xl shrink-0 shadow-2xs">
+                  {roleUtama.hewanEmoji}
+                </div>
+                <div>
+                  <h3 className="text-lg sm:text-xl font-extrabold text-[#1B2A22] leading-tight">
+                    {roleUtama.nama} <span className="font-bold">({roleUtama.kode})</span>
+                  </h3>
+                  <span className="inline-block px-3 py-0.5 rounded-full bg-[#E2F3EB] text-[#13583B] font-bold text-xs mt-1.5">
+                    Karakter: {roleUtama.hewan}
+                  </span>
+                </div>
+              </div>
+
+              {/* Garis Pembatas */}
+              <div className="border-t border-zinc-200/80 my-4" />
+
+              {/* Deskripsi Karakter */}
+              <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed font-normal">
+                {roleUtama.deskripsi}
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Kartu Peran Utama */}
-              <div className="bg-emerald-50/40 rounded-2xl p-5 border-2 border-forest/30 space-y-3 shadow-2xs">
-                <div className="flex items-center justify-between border-b border-forest/15 pb-2.5">
-                  <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-forest text-white uppercase tracking-wider">
-                    Peran Utama
-                  </span>
-                  <span className="text-xs font-bold text-forest">
-                    {roleUtama.kelompok} Role
-                  </span>
-                </div>
-
-                <div className="flex items-center space-x-3 pt-1">
-                  <span className="text-3xl sm:text-4xl p-2 rounded-2xl bg-white border border-forest/20 shadow-2xs">
-                    {roleUtama.hewanEmoji}
-                  </span>
-                  <div>
-                    <div className="text-base sm:text-lg font-extrabold text-dark leading-tight">
-                      {roleUtama.nama} ({roleUtama.kode})
-                    </div>
-                    <div className="text-xs font-semibold text-forest mt-0.5">
-                      Karakter: {roleUtama.hewan}
-                    </div>
-                  </div>
-                </div>
-
-                <p className="text-xs text-zinc-600 leading-relaxed pt-1">
-                  {roleUtama.deskripsi}
-                </p>
+            {/* Card 2: PERAN SEKUNDER */}
+            <div className="relative bg-white rounded-3xl border border-zinc-200/90 shadow-xs overflow-hidden p-6 pt-5 flex flex-col justify-between">
+              {/* Badge Ribbon Pojok Kiri Atas */}
+              <div className="-mt-5 -ml-6 mb-5">
+                <span className="inline-flex items-center space-x-1.5 px-4 py-1.5 bg-[#3F4D67] text-white text-[11px] font-extrabold tracking-wider rounded-br-2xl uppercase shadow-2xs">
+                  <span>»</span>
+                  <span>PERAN SEKUNDER</span>
+                </span>
               </div>
 
-              {/* Kartu Peran Sekunder */}
-              <div className="bg-zinc-50 rounded-2xl p-5 border border-zinc-200/90 space-y-3 shadow-2xs">
-                <div className="flex items-center justify-between border-b border-zinc-200 pb-2.5">
-                  <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-zinc-700 text-white uppercase tracking-wider">
-                    Peran Sekunder
-                  </span>
-                  <span className="text-xs font-semibold text-zinc-600">
-                    {roleSekunder.kelompok} Role
+              {/* Row Avatar & Info */}
+              <div className="flex items-center space-x-4">
+                <div className="w-20 h-20 rounded-full bg-[#E8EDF5] flex items-center justify-center text-4xl shrink-0 shadow-2xs">
+                  {roleSekunder.hewanEmoji}
+                </div>
+                <div>
+                  <h3 className="text-lg sm:text-xl font-extrabold text-[#1B2A22] leading-tight">
+                    {roleSekunder.nama} <span className="font-bold">({roleSekunder.kode})</span>
+                  </h3>
+                  <span className="inline-block px-3 py-0.5 rounded-full bg-[#E8EDF5] text-[#3F4D67] font-bold text-xs mt-1.5">
+                    Karakter: {roleSekunder.hewan}
                   </span>
                 </div>
-
-                <div className="flex items-center space-x-3 pt-1">
-                  <span className="text-3xl sm:text-4xl p-2 rounded-2xl bg-white border border-zinc-200 shadow-2xs">
-                    {roleSekunder.hewanEmoji}
-                  </span>
-                  <div>
-                    <div className="text-base sm:text-lg font-extrabold text-dark leading-tight">
-                      {roleSekunder.nama} ({roleSekunder.kode})
-                    </div>
-                    <div className="text-xs font-semibold text-zinc-600 mt-0.5">
-                      Karakter: {roleSekunder.hewan}
-                    </div>
-                  </div>
-                </div>
-
-                <p className="text-xs text-zinc-600 leading-relaxed pt-1">
-                  {roleSekunder.deskripsi}
-                </p>
               </div>
+
+              {/* Garis Pembatas */}
+              <div className="border-t border-zinc-200/80 my-4" />
+
+              {/* Deskripsi Karakter */}
+              <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed font-normal">
+                {roleSekunder.deskripsi}
+              </p>
             </div>
           </div>
         )}
