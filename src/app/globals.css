@@ -15,3 +15,9 @@ input[type="number"] {
   -moz-appearance: textfield;
   appearance: textfield;
 }
+
+/* Hilangkan tombol mata/reveal bawaan browser (Microsoft Edge & Windows Chromium) */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}

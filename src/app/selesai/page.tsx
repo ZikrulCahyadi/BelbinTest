@@ -4,11 +4,13 @@ import { useState, useEffect } from "react";
 import { FlowIndicator } from "@/components/FlowIndicator";
 import { BELBIN_ROLES } from "@/lib/belbin/roles";
 import { ROLES, type Role } from "@/lib/belbin/scoring-key";
+import { tentukanPeran } from "@/lib/belbin/score";
 import { getHasilPesertaTerakhir, type HasilPeserta } from "@/actions/submit-tes";
 
 export default function SelesaiPage() {
   const [hasil, setHasil] = useState<HasilPeserta | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [showModalUlang, setShowModalUlang] = useState(false);
 
   useEffect(() => {
     async function loadHasil() {
@@ -26,9 +28,13 @@ export default function SelesaiPage() {
               localStorage.setItem("belbin_hasil_tes", JSON.stringify(fresh));
             }
           }
+        } else {
+          // Jika belum ada hasil tes, arahkan ke beranda untuk mulai tes
+          window.location.href = "/";
+          return;
         }
       } catch {
-        // safe fallback
+        window.location.href = "/";
       } finally {
         setIsLoaded(true);
       }
@@ -53,6 +59,19 @@ export default function SelesaiPage() {
   };
 
   const totalPoin = Object.values(displayScores).reduce((a, b) => a + b, 0);
+  const peranInfo = tentukanPeran(displayScores);
+
+  const confirmTesUlang = () => {
+    try {
+      localStorage.removeItem("belbin_hasil_tes");
+      sessionStorage.removeItem("belbin_jawaban");
+      sessionStorage.removeItem("belbin_identitas");
+    } catch {
+      // safe clear
+    }
+
+    window.location.href = "/";
+  };
 
   return (
     <div className="max-w-4xl mx-auto my-4 sm:my-8 px-3 sm:px-4 space-y-5 sm:space-y-6">
@@ -70,20 +89,21 @@ export default function SelesaiPage() {
             <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-dark">
               Tes Berhasil Disimpan
             </h1>
-            <p className="text-xs sm:text-sm text-zinc-500 max-w-md mx-auto">
-              Terima kasih atas partisipasi Anda. Jawaban tes telah tersimpan secara aman di dalam sistem.
+            <p className="text-xs sm:text-sm text-zinc-500 max-w-lg mx-auto leading-relaxed">
+              Terima kasih atas partisipasi Anda
+              {hasil?.nama ? (
+                <>
+                  , <strong className="text-zinc-800 font-bold">{hasil.nama}</strong>
+                </>
+              ) : null}
+              . Jawaban tes telah tersimpan secara aman di dalam sistem.
             </p>
-            {hasil?.nama && (
-              <div className="pt-2 text-xs sm:text-sm font-bold text-forest bg-forest-light/60 py-1.5 px-4 rounded-full inline-block border border-forest-border/70">
-                {hasil.nama} • {hasil.departemen} ({hasil.jabatan})
-              </div>
-            )}
           </div>
         </div>
 
         {/* Teks Header di Atas Card Sesuai Mockup */}
         {isLoaded && roleUtama && roleSekunder && (
-          <div className="text-center pt-2 sm:pt-3 border-t border-zinc-100">
+          <div className="text-center pt-3 border-t border-zinc-100">
             <span className="text-xs font-bold text-forest uppercase tracking-wider">
               PROFIL PERAN TIM ANDA
             </span>
@@ -144,7 +164,7 @@ export default function SelesaiPage() {
               <div className="border-t border-zinc-200/80 my-3.5 sm:my-4" />
 
               {/* Deskripsi Karakter */}
-              <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed font-normal flex-1">
+              <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed font-normal flex-1 text-justify">
                 {roleUtama.deskripsi}
               </p>
             </div>
@@ -197,10 +217,46 @@ export default function SelesaiPage() {
               <div className="border-t border-zinc-200/80 my-3.5 sm:my-4" />
 
               {/* Deskripsi Karakter */}
-              <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed font-normal flex-1">
+              <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed font-normal flex-1 text-justify">
                 {roleSekunder.deskripsi}
               </p>
             </div>
+          </div>
+        )}
+
+        {/* Indikator Catatan Skor Seri Persis Seperti di Admin */}
+        {isLoaded && roleUtama && (peranInfo.seri.length > 1 || peranInfo.utamaSeri) && (
+          <div className="p-4 sm:p-5 rounded-2xl bg-amber-50 border border-amber-200 text-xs sm:text-sm text-amber-900 space-y-1 shadow-2xs">
+            <span className="font-bold flex items-center space-x-1.5 text-amber-800">
+              <span>⚡</span>
+              <span>Catatan Skor Seri:</span>
+            </span>
+            {peranInfo.utamaSeri ? (
+              <p className="leading-relaxed text-amber-900/90">
+                Skor Peran Utama sama dengan Peran Sekunder ({displayScores[roleUtama.kode]} poin).
+                {peranInfo.seri.filter((r) => r !== roleSekunder?.kode).length > 0 && (
+                  <span>
+                    {" "}Terdapat peran lain dengan nilai yang sama:{" "}
+                    <strong>
+                      {peranInfo.seri
+                        .filter((r) => r !== roleSekunder?.kode)
+                        .map((r) => `${BELBIN_ROLES[r].nama} (${r})`)
+                        .join(", ")}
+                    </strong>.
+                  </span>
+                )}
+              </p>
+            ) : (
+              <p className="leading-relaxed text-amber-900/90">
+                Terdapat peran lain dengan nilai yang sama pada posisi kedua:{" "}
+                <strong>
+                  {peranInfo.seri
+                    .filter((r) => r !== roleSekunder?.kode)
+                    .map((r) => `${BELBIN_ROLES[r].nama} (${r})`)
+                    .join(", ")}
+                </strong>.
+              </p>
+            )}
           </div>
         )}
 
@@ -273,7 +329,74 @@ export default function SelesaiPage() {
             </div>
           </div>
         )}
+
+        {/* Tombol Kecil untuk Mengerjakan Ulang Tes */}
+        <div className="pt-2 text-center border-t border-zinc-100">
+          <p className="text-[11px] sm:text-xs text-zinc-400 mb-2">
+            Ingin mengisi ulang kuesioner dari awal?
+          </p>
+          <button
+            type="button"
+            onClick={() => setShowModalUlang(true)}
+            className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-zinc-500 hover:text-zinc-800 bg-zinc-100 hover:bg-zinc-200/80 active:bg-zinc-200 border border-zinc-200 transition cursor-pointer shadow-2xs"
+          >
+            <svg
+              className="w-3.5 h-3.5 text-zinc-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
+            </svg>
+            <span>Kerjakan Ulang Tes</span>
+          </button>
+        </div>
       </div>
+
+      {/* Modal Dialog Konfirmasi Tes Ulang Berbentuk Card Elegan */}
+      {showModalUlang && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs transition-opacity animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl p-6 sm:p-7 border border-zinc-200 shadow-2xl max-w-sm w-full space-y-4 text-center transform transition-all animate-in zoom-in-95 duration-150">
+            {/* Lingkaran Ikon Refresh */}
+            <div className="w-14 h-14 mx-auto rounded-full bg-forest-light text-forest flex items-center justify-center border border-forest-border shadow-2xs">
+              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            </div>
+
+            <div className="space-y-1.5">
+              <h3 className="text-lg font-extrabold text-dark tracking-tight">
+                Kerjakan Ulang Tes?
+              </h3>
+              <p className="text-xs sm:text-sm text-zinc-500 leading-relaxed">
+                Hasil tes yang tersimpan di perangkat ini akan direset dan Anda akan diarahkan kembali ke halaman awal.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2.5 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowModalUlang(false)}
+                className="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold text-zinc-700 bg-zinc-100 hover:bg-zinc-200 active:bg-zinc-300 transition cursor-pointer"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                onClick={confirmTesUlang}
+                className="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold text-white bg-forest hover:bg-forest-hover active:bg-[#144731] transition cursor-pointer shadow-xs"
+              >
+                Ya, Mulai Ulang
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

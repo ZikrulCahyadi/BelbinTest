@@ -134,7 +134,7 @@ export function AdminTable({ initialData }: AdminTableProps) {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-7">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-8 w-full space-y-5 sm:space-y-7">
       {/* Top Header & Quick Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200/80 pb-5">
         <div>
@@ -144,7 +144,7 @@ export function AdminTable({ initialData }: AdminTableProps) {
               Panel Pengelola
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-dark mt-1">
+          <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight text-dark mt-1">
             Rekapitulasi Hasil Tes Belbin
           </h1>
           <p className="text-xs sm:text-sm text-zinc-500 mt-1">
@@ -152,13 +152,13 @@ export function AdminTable({ initialData }: AdminTableProps) {
           </p>
         </div>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2.5 sm:space-x-3 flex-wrap">
           <a
             href="/api/export"
             download
-            className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-forest hover:bg-forest-hover active:bg-[#144731] text-white text-xs font-bold transition shadow-xs cursor-pointer"
+            className="inline-flex items-center space-x-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-forest hover:bg-forest-hover active:bg-[#144731] text-white text-xs font-bold transition shadow-xs cursor-pointer"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             <span>Ekspor Excel (.xlsx)</span>
@@ -168,9 +168,9 @@ export function AdminTable({ initialData }: AdminTableProps) {
             type="button"
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className="inline-flex items-center space-x-1.5 px-4 py-2.5 rounded-xl bg-white border border-zinc-300/90 hover:bg-zinc-50 text-zinc-700 text-xs font-bold transition disabled:opacity-50 cursor-pointer shadow-2xs"
+            className="inline-flex items-center space-x-1.5 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-white border border-zinc-300/90 hover:bg-zinc-50 text-zinc-700 text-xs font-bold transition disabled:opacity-50 cursor-pointer shadow-2xs"
           >
-            <svg className="w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-zinc-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
             <span>{isLoggingOut ? "Keluar..." : "Keluar"}</span>
@@ -179,9 +179,9 @@ export function AdminTable({ initialData }: AdminTableProps) {
       </div>
 
       {/* Ringkasan Angka / Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-5">
         {/* Card 1: Total Peserta */}
-        <div className="bg-white p-5 sm:p-6 rounded-2xl border border-zinc-200/90 shadow-xs flex items-center space-x-4">
+        <div className="bg-white p-4 sm:p-6 rounded-2xl border border-zinc-200/90 shadow-xs flex items-center space-x-4">
           <div className="w-12 h-12 rounded-xl bg-forest-light text-forest flex items-center justify-center shrink-0 border border-forest-border">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -201,7 +201,7 @@ export function AdminTable({ initialData }: AdminTableProps) {
         </div>
 
         {/* Card 2: Departemen Terdaftar */}
-        <div className="bg-white p-5 sm:p-6 rounded-2xl border border-zinc-200/90 shadow-xs flex items-center space-x-4">
+        <div className="bg-white p-4 sm:p-6 rounded-2xl border border-zinc-200/90 shadow-xs flex items-center space-x-4">
           <div className="w-12 h-12 rounded-xl bg-zinc-100 text-zinc-700 flex items-center justify-center shrink-0 border border-zinc-200">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -221,7 +221,7 @@ export function AdminTable({ initialData }: AdminTableProps) {
         </div>
 
         {/* Card 3: Hasil Filter */}
-        <div className="bg-white p-5 sm:p-6 rounded-2xl border border-zinc-200/90 shadow-xs flex items-center space-x-4">
+        <div className="bg-white p-4 sm:p-6 rounded-2xl border border-zinc-200/90 shadow-xs flex items-center space-x-4">
           <div className="w-12 h-12 rounded-xl bg-forest-light text-forest flex items-center justify-center shrink-0 border border-forest-border">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
@@ -303,7 +303,7 @@ export function AdminTable({ initialData }: AdminTableProps) {
         </div>
       </div>
 
-      {/* Tabel Data Utama */}
+      {/* Tabel Data Utama (Responsif dengan Horizontal Scroll) */}
       <div className="bg-white rounded-2xl border border-zinc-200/90 shadow-xs overflow-hidden">
         <div className="p-4 sm:p-5 border-b border-zinc-100 flex items-center justify-between">
           <div className="flex items-center space-x-2">
@@ -314,13 +314,14 @@ export function AdminTable({ initialData }: AdminTableProps) {
               {filteredData.length} Data
             </span>
           </div>
-          <span className="text-xs text-zinc-400">
+          <span className="text-xs text-zinc-400 hidden sm:inline">
             Klik &apos;Lihat Detail&apos; untuk visualisasi skor 8 peran
           </span>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs sm:text-sm">
+        {/* Tampilan Tabel Selalu Ada di Semua Ukuran Layar dengan Horizontal Scroll */}
+        <div className="overflow-x-auto w-full">
+          <table className="w-full min-w-[720px] text-left border-collapse text-xs sm:text-sm">
             <thead>
               <tr className="bg-zinc-50 border-b border-zinc-200 text-zinc-500 font-bold uppercase tracking-wider text-[11px]">
                 <th className="py-3.5 px-5">Nama Peserta</th>
@@ -353,12 +354,9 @@ export function AdminTable({ initialData }: AdminTableProps) {
                   return (
                     <tr key={item.id} className="hover:bg-forest-light/15 transition-colors">
                       {/* Nama */}
-                      <td className="py-4 px-5">
+                      <td className="py-4 px-5 whitespace-nowrap">
                         <div className="font-bold text-dark text-sm">
                           {item.nama}
-                        </div>
-                        <div className="text-[11px] text-zinc-400 sm:hidden">
-                          {item.departemen} • {item.jabatan}
                         </div>
                       </td>
 
@@ -376,7 +374,7 @@ export function AdminTable({ initialData }: AdminTableProps) {
 
                       {/* Peran Utama */}
                       <td className="py-4 px-4">
-                        <span className="font-bold text-forest bg-forest-light px-3 py-1 rounded-lg border border-forest-border text-xs inline-flex items-center space-x-1">
+                        <span className="font-bold text-forest bg-forest-light px-3 py-1 rounded-lg border border-forest-border text-xs inline-flex items-center space-x-1 whitespace-nowrap shadow-2xs">
                           <span>{roleUtama?.nama || item.peran_utama}</span>
                           <span className="opacity-75 font-normal">({item.peran_utama})</span>
                         </span>
@@ -385,7 +383,7 @@ export function AdminTable({ initialData }: AdminTableProps) {
                       {/* Peran Sekunder */}
                       <td className="py-4 px-4">
                         <div className="flex items-center space-x-1.5 flex-wrap gap-y-1">
-                          <span className="font-semibold text-zinc-700 bg-zinc-100 px-3 py-1 rounded-lg border border-zinc-200 text-xs inline-flex items-center space-x-1">
+                          <span className="font-semibold text-zinc-700 bg-zinc-100 px-3 py-1 rounded-lg border border-zinc-200 text-xs inline-flex items-center space-x-1 whitespace-nowrap shadow-2xs">
                             <span>{roleSekunder?.nama || item.peran_sekunder}</span>
                             <span className="opacity-60 font-normal">({item.peran_sekunder})</span>
                           </span>
@@ -395,7 +393,7 @@ export function AdminTable({ initialData }: AdminTableProps) {
                               title={
                                 item.utamaSeri
                                   ? "Skor Utama dan Sekunder sama besar"
-                                  : `Seri peran sekunder dengan ${item.seriList.join(", ")}`
+                                  : `Seri peran sekunder dengan ${item.seriList.filter((r) => r !== item.peran_sekunder).join(", ")}`
                               }
                             >
                               Seri

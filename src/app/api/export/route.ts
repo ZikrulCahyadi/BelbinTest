@@ -49,7 +49,7 @@ export async function GET() {
       const statusSeri = isSeri
         ? hasilPeran.utamaSeri
           ? "Seri (Utama = Sekunder)"
-          : `Seri Posisi 2 (${hasilPeran.seri.join(", ")})`
+          : `Seri Posisi 2 (${hasilPeran.seri.filter((s) => s !== r.peran_sekunder).join(", ")})`
         : "Tidak";
 
       const totalSkor = Object.values(skor).reduce((a, b) => a + b, 0);
@@ -72,14 +72,14 @@ export async function GET() {
         "Peran Utama": `${namaUtama} (${r.peran_utama})`,
         "Peran Sekunder": `${namaSekunder} (${r.peran_sekunder})`,
         "Status Seri": statusSeri,
-        "Driver (SH)": r.skor_sh,
+        "Shaper (SH)": r.skor_sh,
         "Co-ordinator (CO)": r.skor_co,
-        "Originator (PL)": r.skor_pl,
+        "Plant (PL)": r.skor_pl,
         "Resource Investigator (RI)": r.skor_ri,
         "Monitor Evaluator (ME)": r.skor_me,
         "Implementer (IMP)": r.skor_imp,
-        "Supporter (TW)": r.skor_tw,
-        "Finisher (CF)": r.skor_cf,
+        "Teamworker (TW)": r.skor_tw,
+        "Completer Finisher (CF)": r.skor_cf,
         "Total Skor": totalSkor,
         "Versi Kunci": r.versi_kunci,
         "Tanggal Pengisian": dateStr,
